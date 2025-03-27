@@ -10,8 +10,8 @@ import matplotlib.pyplot as plt
 import numpy as np
 
 st.write("""
-   # Explore different classifier 
-   ## Which one is the best?
+   # Exploration of different classifiers 
+   ## and finding out which one of them is the best?
 """)
 
 dataset_name = st.sidebar.selectbox("Select Dataset", ("Iris", "Breast Cancer", "Wine dataset"))
