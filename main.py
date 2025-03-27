@@ -2,7 +2,11 @@ import streamlit as st
 from sklearn import datasets
 from sklearn.neighbors import KNeighborsClassifier
 from sklearn.svm import SVC
-from sklearn.
+from sklearn.ensemble import RandomForestClassifier
+from sklearn.model_selection import train_test_split
+from sklearn.metrics import accuracy_score
+from sklearn.decomposition import PCA
+import matplotlib.pyplot as plt
 import numpy as np
 
 st.write("""
@@ -40,7 +44,13 @@ def add_parameter_ui(classifier_name):
     return parameter_dictionary
 
 def get_classifier(classifier_name, parameter_dictionary):
-
+    if classifier_name == "KNN":
+        classifier = KNeighborsClassifier(n_neighbors=parameter_dictionary["K"])
+    elif classifier_name == "SVM":
+        classifier = SVC(C=parameter_dictionary["C"])
+    else:
+        classifier = RandomForestClassifier(max_depth=parameter_dictionary["max_depth"], n_estimators=parameter_dictionary["no_of_estimators"], random_state=1234)
+    return classifier
 
 x, y = get_dataset(dataset_name)
 
@@ -48,3 +58,27 @@ st.write(f"Shape of dataset: {x.shape}")
 st.write(f"Number of classes: {np.unique_values(y)}")
 
 parameter_dictionary = add_parameter_ui(classifier_name)
+classifier = get_classifier(classifier_name, parameter_dictionary)
+
+x_test, x_train, y_test, y_train = train_test_split(x, y, test_size=0.2, random_state=1234)
+
+classifier.fit(x_train, y_train)
+y_predict = classifier.predict(x_test)
+
+accuracy = accuracy_score(y_test, y_predict)
+
+st.write(f"Classifier Name = {classifier_name}")
+st.write(f"Accuracy = {accuracy}")
+
+principal_component_analysis = PCA(2)
+x_projected = principal_component_analysis.fit_transform(x)
+
+x1, x2 = x_projected[:, 0], x_projected[:, 1]
+
+fig = plt.figure()
+plt.scatter(x1, x2, c=y, alpha=0.8, cmap="viridis")
+plt.xlabel("Principal Component 1")
+plt.ylabel("Principal Component 2")
+plt.colorbar()
+
+st.pyplot(fig)
