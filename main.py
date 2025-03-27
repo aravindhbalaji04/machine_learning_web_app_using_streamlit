@@ -11,7 +11,7 @@ import numpy as np
 
 st.write("""
    # Exploration of different classifiers 
-   ## and finding out which one of them is the best?
+   ## finding out which one of them is the best?
 """)
 
 dataset_name = st.sidebar.selectbox("Select Dataset", ("Iris", "Breast Cancer", "Wine dataset"))
